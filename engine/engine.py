@@ -31,6 +31,7 @@ class Engine:
 			self.renderer.clear()
 
 			# game loop here
+			self.game.render(self.renderer)
 
 			# update screen (flip)
 			self.renderer.update()
