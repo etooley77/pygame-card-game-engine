@@ -8,6 +8,10 @@ class Game:
 	def update(self, dt, input_system):
 		pass
 
-	def render(self, renderer):
+	def render(self, context):
 		menu_image = load("game/assets/menu.png").convert_alpha()
-		renderer.surface.blit(menu_image, (0, 0))
+		context.renderer.surface.blit(menu_image, (0, 0))
+
+		# 
+		aos = context.asset_manager.get("ace_of_spades")
+		context.renderer.surface.blit(aos, (400, 300))
