@@ -14,5 +14,5 @@ class Game:
 		context.renderer.surface.blit(menu_image, (0, 0))
 
 		# 
-		aos = context.asset_manager.get("ace_of_spades")
-		context.renderer.surface.blit(aos, (400, 300))
+		aos = context.asset_manager.get("ace_of_diamonds")
+		if aos is not None: context.renderer.surface.blit(aos, (400, 300))
