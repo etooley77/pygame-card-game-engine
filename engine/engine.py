@@ -26,21 +26,20 @@ class Engine:
 		# Inject game and create engine context
 		self.engine_context = EngineContext(self.asset_manager, self.renderer, None)
 		self.game = game
+		self.game.initialize_context(self.engine_context)
 
 	def run(self):
 		while True:
-			events = self.input_system.monitor()
-
 			# Tick clock and gather input
 			dt = self.clock.tick_engine()
-			# input here
+			input_context = self.input_system.monitor()
 
 			# clear screen
 			self.renderer.clear()
 
 			# game loop here
-			self.game.update(dt, events)
-			self.game.render(self.engine_context)
+			self.game.update(dt, input_context)
+			self.game.render(self.engine_context.renderer.surface)
 
 			# update screen (flip)
 			self.renderer.update()
