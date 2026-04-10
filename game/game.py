@@ -5,8 +5,9 @@ class Game:
 		self.window_size = (800, 600)
 		self.title = "Test Game"
 
-	def update(self, dt, input_system):
-		pass
+	def update(self, dt, events):
+		if (len(events) > 0):
+			print(events)
 
 	def render(self, context):
 		menu_image = load("game/assets/menu.png").convert_alpha()
