@@ -18,7 +18,7 @@ class AssetManager:
 	
 	# Load default cards
 	def load_default_cards(self):
-		default_cards_path = r"engine/default/assets/cards"
+		default_cards_path = r"engine/assets/cards"
 
 		for card_image in listdir(default_cards_path):
 			self.load_image(card_image.split(".")[0], (default_cards_path + f"/{card_image}"))
