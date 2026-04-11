@@ -14,12 +14,11 @@ class Card(Draggable):
 		super().__init__()
 		self.image = image
 		self.scale_image = False
-		self.scale_factor = 1.1 # Must be greater than one
+		self.scale_factor = 1.1
 
 		self.pos = pos
 		self.rect = self.image.get_rect(topleft=pos)
 
-		self.is_active = False
 		self.do_scale_on_hover = True
 
 	def update(self, input_context):
