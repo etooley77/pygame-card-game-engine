@@ -30,10 +30,18 @@ class Game:
 		# if (len(event_context.events) > 0):
 		# 	print(event_context.events)
 
+		hovered_card_index = None
 		for card in self.cards:
 			is_hovered = card.update(event_context)
 
+			if is_hovered:
+				card.do_scale_on_hover = True
+				self.cards[self.cards.index(card) - 1].do_scale_on_hover = False
+			else:
+				self.cards[self.cards.index(card) - 1].do_scale_on_hover = True
+
 			if card.is_active:
+				self.cards[self.cards.index(card) - 1].stop_drag()
 				self.cards.append(self.cards.pop(self.cards.index(card)))
 
 	def render(self, surface):

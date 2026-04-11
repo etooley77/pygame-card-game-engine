@@ -13,6 +13,7 @@ class Card(Draggable):
 		self.rect = self.image.get_rect(topleft=pos)
 
 		self.is_active = False
+		self.do_scale_on_hover = True
 
 	def update(self, input_context):
 		mouse_pos = input_context.mouse_pos
@@ -45,7 +46,7 @@ class Card(Draggable):
 		return hovered
 
 	def render(self, surface):
-		if self.scale_image:
+		if self.scale_image and self.do_scale_on_hover:
 			surface.blit(scale_by(self.image, self.scale_factor), self.calculate_scaled_pos())
 		else:
 			surface.blit(self.image, self.pos)
