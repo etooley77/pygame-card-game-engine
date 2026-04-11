@@ -30,7 +30,6 @@ class Game:
 		# if (len(event_context.events) > 0):
 		# 	print(event_context.events)
 
-		hovered_card_index = None
 		for card in self.cards:
 			card.update(event_context)
 
