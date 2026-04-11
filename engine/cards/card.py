@@ -3,6 +3,13 @@ from pygame.transform import scale_by
 from engine.cards.behaviors.draggable import Draggable
 
 class Card(Draggable):
+	active_card = None
+	hovered_card = None
+
+	@staticmethod
+	def reorder():
+		pass
+
 	def __init__(self, image, pos):
 		super().__init__()
 		self.image = image
@@ -19,31 +26,32 @@ class Card(Draggable):
 		mouse_pos = input_context.mouse_pos
 		hovered = self.rect.collidepoint(mouse_pos)
 
-		# Use scaled image
+		# Use scaled image and set currently hovered card
 		if hovered:
 			self.scale_image = True
+			Card.hovered_card = self
 
-		# Start dragging
+		# Start dragging and set currently active card
 		if hovered and input_context.mouse_pressed:
 			self.start_drag(mouse_pos, self.pos)
-			self.is_active = True
+			Card.active_card = self
 
 		# Change position via dragging
 		if self.dragging and input_context.mouse_down:
 			self.pos = self.drag(mouse_pos)
 
-		# Stop dragging
+		# Stop dragging and unset currenly active card
 		if self.dragging and input_context.mouse_released:
 			self.stop_drag()
-			self.is_active = False
+			Card.active_card = None
 
-		# Stop scaling the image
+		# Stop scaling the image and unset currently hovered card
 		if not hovered:
 			self.scale_image = False
+			Card.hovered_card = None
 
+		# Update position
 		self.rect.topleft = self.pos
-
-		return hovered
 
 	def render(self, surface):
 		if self.scale_image and self.do_scale_on_hover:
