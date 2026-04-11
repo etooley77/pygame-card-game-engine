@@ -19,7 +19,6 @@ class Engine:
 		self.renderer = Renderer(self.window)
 
 		self.asset_manager = AssetManager()
-		self.asset_manager.load_default_cards()
 
 		self.input_system = InputSystem()
 
