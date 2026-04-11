@@ -28,30 +28,27 @@ class Card:
 	def update(self, input_context):
 		hovered = self.rect.collidepoint(input_context.mouse_pos)
 
-		# Use scaled image and set currently hovered card
+		# Set currently active and hovered cards
 		if hovered:
-			self.hoverable.start_hover()
 			Card.hovered = self
-
-		# Start dragging and set currently active card
-		if hovered and input_context.mouse_pressed:
-			self.draggable.start_drag(input_context.mouse_pos, self.pos)
-			Card.active = self
-
-		# Change position via dragging
-		if self.draggable.dragging and input_context.mouse_down:
-			self.pos = self.draggable.drag(input_context.mouse_pos)
-
-		# Stop dragging and unset currently active card
-		if self.draggable.dragging and input_context.mouse_released:
-			self.draggable.stop_drag()
-			if Card.active is self:
-				Card.active = None
-		# Stop scaling the image and unset currently hovered card
-		if not hovered:
-			self.hoverable.stop_hover()
-			if Card.hovered is self:
+			if input_context.mouse_pressed:
+				Card.active = self
+		else:
+			if Card.hovered == self:
 				Card.hovered = None
+
+		if self == Card.hovered:
+			self.hoverable.start_hover()
+
+			if input_context.mouse_pressed:
+				self.draggable.start_drag(input_context.mouse_pos, self.pos)
+
+			if self == Card.active and input_context.mouse_down:
+				self.pos = self.draggable.drag(input_context.mouse_pos)
+			else:
+				self.draggable.stop_drag()
+		else:
+			self.hoverable.stop_hover()
 
 		# Update position
 		self.rect.topleft = self.pos
