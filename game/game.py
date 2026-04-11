@@ -14,7 +14,7 @@ class Game:
 	def initialize_context(self, engine_context):
 		self.asset_manager = engine_context.asset_manager
 
-		self.background = load("game/assets/menu.png").convert_alpha()
+		self.background = self.asset_manager.scale_to_screen_size(engine_context.renderer.surface, load("game/assets/menu.png").convert_alpha())
 
 		# State (temporary)
 		self.asset_manager.load_default_cards()
@@ -32,16 +32,17 @@ class Game:
 
 		hovered_card_index = None
 		for card in self.cards:
-			is_hovered = card.update(event_context)
+			card.update(event_context)
 
-			if is_hovered:
+			# If a card is hovered, disable the hover effect of all cards rendered behind
+			if Card.hovered_card == card:
 				card.do_scale_on_hover = True
 				self.cards[self.cards.index(card) - 1].do_scale_on_hover = False
 			else:
 				self.cards[self.cards.index(card) - 1].do_scale_on_hover = True
 
-			if card.is_active:
-				self.cards[self.cards.index(card) - 1].stop_drag()
+			# If card is clicked, 
+			if Card.active_card == card:
 				self.cards.append(self.cards.pop(self.cards.index(card)))
 
 	def render(self, surface):
