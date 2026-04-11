@@ -12,6 +12,8 @@ class Card(Draggable):
 		self.pos = pos
 		self.rect = self.image.get_rect(topleft=pos)
 
+		self.is_active = False
+
 	def update(self, input_context):
 		mouse_pos = input_context.mouse_pos
 		hovered = self.rect.collidepoint(mouse_pos)
@@ -23,6 +25,7 @@ class Card(Draggable):
 		# Start dragging
 		if hovered and input_context.mouse_pressed:
 			self.start_drag(mouse_pos, self.pos)
+			self.is_active = True
 
 		# Change position via dragging
 		if self.dragging and input_context.mouse_down:
@@ -31,12 +34,15 @@ class Card(Draggable):
 		# Stop dragging
 		if self.dragging and input_context.mouse_released:
 			self.stop_drag()
+			self.is_active = False
 
 		# Stop scaling the image
 		if not hovered:
 			self.scale_image = False
 
 		self.rect.topleft = self.pos
+
+		return hovered
 
 	def render(self, surface):
 		if self.scale_image:
