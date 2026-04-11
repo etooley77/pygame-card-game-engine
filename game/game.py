@@ -26,6 +26,9 @@ class Game:
 		aoc = Card(self.asset_manager.get("ace_of_clubs"), (200, 300))
 		self.cards.append(aoc)
 
+		aod = Card(self.asset_manager.get("ace_of_diamonds"), (600, 300))
+		self.cards.append(aod)
+
 	def update(self, dt, event_context):
 		# if (len(event_context.events) > 0):
 		# 	print(event_context.events)
@@ -33,16 +36,7 @@ class Game:
 		for card in self.cards:
 			card.update(event_context)
 
-			# If a card is hovered, disable the hover effect of all cards rendered behind
-			if Card.hovered_card == card:
-				card.do_scale_on_hover = True
-				self.cards[self.cards.index(card) - 1].do_scale_on_hover = False
-			else:
-				self.cards[self.cards.index(card) - 1].do_scale_on_hover = True
-
-			# If card is clicked, 
-			if Card.active_card == card:
-				self.cards.append(self.cards.pop(self.cards.index(card)))
+		self.cards = Card.reorder(self.cards)
 
 	def render(self, surface):
 		if self.background:

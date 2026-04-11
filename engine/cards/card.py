@@ -1,66 +1,64 @@
-from pygame.transform import scale_by
+from engine.cards.behaviors import draggable, hoverable
 
-from engine.cards.behaviors.draggable import Draggable
-
-class Card(Draggable):
-	active_card = None
-	hovered_card = None
+class Card:
+	#: The currently active card being dragged, or None if no card is active.
+	active = None
+	#: The card currently being hovered over, or None if no card is hovered.
+	hovered = None
 
 	@staticmethod
-	def reorder():
-		pass
+	def reorder(card_list):
+		if Card.active == None:
+			return card_list
+		else:
+			if Card.active in card_list:
+				card_list.append(card_list.pop(card_list.index(Card.active)))
+				return card_list
 
 	def __init__(self, image, pos):
-		super().__init__()
+		self.draggable = draggable.Draggable()
+		self.hoverable = hoverable.Hoverable()
 		self.image = image
-		self.scale_image = False
-		self.scale_factor = 1.1
+		self.hoverable.scale_factor = 1.1 # override default scale factor
 
+		self.pos = pos
 		self.pos = pos
 		self.rect = self.image.get_rect(topleft=pos)
 
-		self.do_scale_on_hover = True
-
 	def update(self, input_context):
-		mouse_pos = input_context.mouse_pos
-		hovered = self.rect.collidepoint(mouse_pos)
+		hovered = self.rect.collidepoint(input_context.mouse_pos)
 
 		# Use scaled image and set currently hovered card
 		if hovered:
-			self.scale_image = True
-			Card.hovered_card = self
+			self.hoverable.start_hover()
+			Card.hovered = self
 
 		# Start dragging and set currently active card
 		if hovered and input_context.mouse_pressed:
-			self.start_drag(mouse_pos, self.pos)
-			Card.active_card = self
+			self.draggable.start_drag(input_context.mouse_pos, self.pos)
+			Card.active = self
 
 		# Change position via dragging
-		if self.dragging and input_context.mouse_down:
-			self.pos = self.drag(mouse_pos)
+		if self.draggable.dragging and input_context.mouse_down:
+			self.pos = self.draggable.drag(input_context.mouse_pos)
 
-		# Stop dragging and unset currenly active card
-		if self.dragging and input_context.mouse_released:
-			self.stop_drag()
-			Card.active_card = None
-
+		# Stop dragging and unset currently active card
+		if self.draggable.dragging and input_context.mouse_released:
+			self.draggable.stop_drag()
+			if Card.active is self:
+				Card.active = None
 		# Stop scaling the image and unset currently hovered card
 		if not hovered:
-			self.scale_image = False
-			Card.hovered_card = None
+			self.hoverable.stop_hover()
+			if Card.hovered is self:
+				Card.hovered = None
 
 		# Update position
 		self.rect.topleft = self.pos
 
 	def render(self, surface):
-		if self.scale_image and self.do_scale_on_hover:
-			surface.blit(scale_by(self.image, self.scale_factor), self.calculate_scaled_pos())
+		if self.hoverable.hovering and self == Card.hovered:
+			scaled_image = self.hoverable.scale_on_hover(self.image, self.pos)
+			surface.blit(scaled_image[0], scaled_image[1])
 		else:
 			surface.blit(self.image, self.pos)
-
-	def calculate_scaled_pos(self):
-		w = self.image.get_width()
-		h = self.image.get_height()
-		s = self.scale_factor
-	
-		return (self.pos[0] - 0.5 * w * (s - 1), self.pos[1] - 0.5 * h * (s - 1))

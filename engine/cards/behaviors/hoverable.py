@@ -1,18 +1,26 @@
+from pygame.transform import scale_by
+
 class Hoverable:
 	def __init__(self):
 		self.hovering = False
+		self.do_hover = False
 		self.scale_factor = 2
-		self._private = "hidden"
 
 	def start_hover(self):
-		pass
+		self.hovering = True
 
-	def scale_on_hover():
-		pass
+	def stop_hover(self):
+		self.hovering = False
 
-	def calculate_scaled_pos(self):
-		w = self.image.get_width()
-		h = self.image.get_height()
+	def set_hover(self, is_hovering):
+		self.hovering = is_hovering
+
+	def scale_on_hover(self, image, pos):
+		return [scale_by(image, self.scale_factor), self.calculate_scaled_pos(image, pos)]
+
+	def calculate_scaled_pos(self, image, pos):
+		w = image.get_width()
+		h = image.get_height()
 		s = self.scale_factor
 	
-		return (self.pos[0] - 0.5 * w * (s - 1), self.pos[1] - 0.5 * h * (s - 1))
+		return (pos[0] - 0.5 * w * (s - 1), pos[1] - 0.5 * h * (s - 1))

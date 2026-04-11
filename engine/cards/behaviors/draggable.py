@@ -12,3 +12,6 @@ class Draggable:
 	
 	def stop_drag(self):
 		self.dragging = False
+
+	def monitor(self, context):
+		pass
