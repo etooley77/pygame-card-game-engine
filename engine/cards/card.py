@@ -1,3 +1,6 @@
+from pygame.rect import Rect
+from pygame import draw
+
 from engine.cards.behaviors import draggable, hoverable
 
 class Card:
@@ -22,14 +25,15 @@ class Card:
 		self.hoverable.scale_factor = 1.1 # override default scale factor
 
 		self.pos = pos
-		self.pos = pos
-		self.rect = self.image.get_rect(topleft=pos)
+		self.rect = self.image.get_rect(center=pos)
+		self.draggable_rect = Rect(0, 0, self.rect.width // 1.25, self.rect.height // 1.5)
 
 	def update(self, input_context):
 		hovered = self.rect.collidepoint(input_context.mouse_pos)
+		can_be_dragged = self.draggable_rect.collidepoint(input_context.mouse_pos)
 
 		# Set currently active and hovered cards
-		if hovered:
+		if can_be_dragged:
 			Card.hovered = self
 			if input_context.mouse_pressed:
 				Card.active = self
@@ -52,6 +56,7 @@ class Card:
 
 		# Update position
 		self.rect.topleft = self.pos
+		self.draggable_rect.center = self.rect.center
 
 	def render(self, surface):
 		if self.hoverable.hovering and self == Card.hovered:
