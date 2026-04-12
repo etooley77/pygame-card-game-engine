@@ -25,7 +25,7 @@ class Engine:
 		# Inject game and create engine context
 		self.engine_context = EngineContext(self.asset_manager, self.renderer, None)
 		self.game = game
-		self.game.initialize_context(self.engine_context)
+		self.game.enter(self.engine_context)
 
 	def run(self):
 		while True:
