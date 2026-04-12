@@ -52,8 +52,10 @@ class Card:
 
 			if self == Card.active and input_context.mouse_down:
 				self.pos = self.draggable.drag(input_context.mouse_pos)
-		else:
-			self.draggable.stop_drag()
+
+			if self == Card.active and input_context.mouse_released:
+				self.draggable.stop_drag()
+				Card.active = None
 
 		# Update position
 		self.rect.topleft = self.pos
