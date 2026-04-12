@@ -29,7 +29,7 @@ class Card:
 		self.draggable_rect = Rect(0, 0, self.rect.width // 1.25, self.rect.height // 1.5)
 
 	def update(self, input_context):
-		hovered = self.rect.collidepoint(input_context.mouse_pos)
+		# hovered = self.rect.collidepoint(input_context.mouse_pos)
 		can_be_dragged = self.draggable_rect.collidepoint(input_context.mouse_pos)
 
 		# Set currently active and hovered cards
@@ -43,16 +43,17 @@ class Card:
 
 		if self == Card.hovered:
 			self.hoverable.start_hover()
+		else:
+			self.hoverable.stop_hover()
 
+		if self == Card.active:
 			if input_context.mouse_pressed:
 				self.draggable.start_drag(input_context.mouse_pos, self.pos)
 
 			if self == Card.active and input_context.mouse_down:
 				self.pos = self.draggable.drag(input_context.mouse_pos)
-			else:
-				self.draggable.stop_drag()
 		else:
-			self.hoverable.stop_hover()
+			self.draggable.stop_drag()
 
 		# Update position
 		self.rect.topleft = self.pos
