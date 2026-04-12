@@ -1,7 +1,8 @@
 from pygame.rect import Rect
-from pygame import draw
 
 from engine.cards.behaviors import draggable, hoverable
+
+from engine.input.mouse_handler import MouseHandler
 
 class Card:
 	#: The currently active card being dragged, or None if no card is active.
@@ -28,7 +29,7 @@ class Card:
 		self.rect = self.image.get_rect(center=pos)
 		self.draggable_rect = Rect(0, 0, self.rect.width // 1.25, self.rect.height // 1.5)
 
-	def update(self, input_context):
+	def update(self, input_context, game_context):
 		# hovered = self.rect.collidepoint(input_context.mouse_pos)
 		can_be_dragged = self.draggable_rect.collidepoint(input_context.mouse_pos)
 
@@ -47,15 +48,16 @@ class Card:
 			self.hoverable.stop_hover()
 
 		if self == Card.active:
-			if input_context.mouse_pressed:
-				self.draggable.start_drag(input_context.mouse_pos, self.pos)
+			if MouseHandler.check_inside_screen(input_context.mouse_pos, game_context["window_size"]):
+				if input_context.mouse_pressed:
+					self.draggable.start_drag(input_context.mouse_pos, self.pos)
 
-			if self == Card.active and input_context.mouse_down:
-				self.pos = self.draggable.drag(input_context.mouse_pos)
+				if self == Card.active and input_context.mouse_down:
+					self.pos = self.draggable.drag(input_context.mouse_pos)
 
-			if self == Card.active and input_context.mouse_released:
-				self.draggable.stop_drag()
-				Card.active = None
+				if self == Card.active and input_context.mouse_released:
+					self.draggable.stop_drag()
+					Card.active = None
 
 		# Update position
 		self.rect.topleft = self.pos
