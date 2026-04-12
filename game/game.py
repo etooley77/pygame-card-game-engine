@@ -11,6 +11,8 @@ class Game:
 		self.background = None
 		self.cards = []
 
+		self.game_context = {"window_size": self.window_size}
+
 	def initialize_context(self, engine_context):
 		self.asset_manager = engine_context.asset_manager
 
@@ -34,7 +36,7 @@ class Game:
 		# 	print(event_context.events)
 
 		for card in self.cards:
-			card.update(event_context)
+			card.update(event_context, self.game_context)
 
 		self.cards = Card.reorder(self.cards)
 
