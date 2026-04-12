@@ -1,48 +1,24 @@
 from pygame.image import load
 from pygame.transform import scale_by
 
-from engine.cards.card import Card
+from game.states import sandbox_state
 
 class Game:
 	def __init__(self):
 		self.window_size = (1200, 900)
 		self.title = "Test Game"
-
-		self.background = None
-		self.cards = []
-
 		self.game_context = {"window_size": self.window_size}
 
-	def initialize_context(self, engine_context):
-		self.asset_manager = engine_context.asset_manager
+		self.states = []
 
-		self.background = self.asset_manager.scale_to_screen_size(engine_context.renderer.surface, load("game/assets/menu.png").convert_alpha())
+	def enter(self, engine_context):
+		self.game_context["asset_manager"] = engine_context.asset_manager
 
-		# State (temporary)
-		self.asset_manager.load_default_cards()
-
-		# temp
-		aos = Card(self.asset_manager.get("ace_of_spades"), (400, 300))
-		self.cards.append(aos)
-
-		aoc = Card(self.asset_manager.get("ace_of_clubs"), (200, 300))
-		self.cards.append(aoc)
-
-		aod = Card(self.asset_manager.get("ace_of_diamonds"), (600, 300))
-		self.cards.append(aod)
+		self.states.append(sandbox_state.SandboxState(self.game_context))
+		self.states[0].enter(engine_context)
 
 	def update(self, dt, event_context):
-		# if (len(event_context.events) > 0):
-		# 	print(event_context.events)
-
-		for card in self.cards:
-			card.update(event_context, self.game_context)
-
-		self.cards = Card.reorder(self.cards)
+		self.states[0].update(dt, event_context)
 
 	def render(self, surface):
-		if self.background:
-			surface.blit(self.background, (0, 0))
-
-		for card in self.cards:
-			card.render(surface)
+		self.states[0].render(surface)
