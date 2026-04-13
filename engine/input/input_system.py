@@ -19,6 +19,8 @@ class InputSystem:
 
 			if event.type == pygame.KEYDOWN:
 				self.input_queue.append(event)
+
+			# KEYUP event implementation for held keys
 			
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				self.input_context.mouse_pressed = True
