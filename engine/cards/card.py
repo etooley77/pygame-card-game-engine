@@ -42,7 +42,7 @@ class Card:
 			if Card.hovered == self:
 				Card.hovered = None
 
-		if self == Card.hovered:
+		if self == Card.hovered and Card.active == None:
 			self.hoverable.start_hover()
 		else:
 			self.hoverable.stop_hover()
