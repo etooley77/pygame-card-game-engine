@@ -22,8 +22,8 @@ class Game:
 
 		self.state_manager.enter_state(sandbox_state.SandboxState(self.game_context))
 
-	def update(self, dt, input_context):
-		self.state_manager.states[0].update(dt, input_context)
+	def update(self, dt, events):
+		self.state_manager.states[0].update(dt, events)
 
 	def render(self, surface):
 		self.state_manager.states[0].render(surface)

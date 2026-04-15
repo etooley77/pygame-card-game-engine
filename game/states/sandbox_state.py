@@ -16,9 +16,12 @@ class SandboxState(BaseState):
 	def exit(self):
 		pass
 
-	def update(self, dt, event_context):
-		for card in self.cards:
-			card.update(event_context, self.game_context)
+	def update(self, dt, events):
+		if len(events) > 0:
+			print(events)
+
+		# for card in self.cards:
+			# card.update(event_context, self.game_context)
 
 		self.cards = Card.reorder(self.cards)
 

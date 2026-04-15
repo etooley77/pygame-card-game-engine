@@ -31,13 +31,13 @@ class Engine:
 		while True:
 			# Tick clock and gather input
 			dt = self.clock.tick_engine()
-			input_context = self.input_system.monitor()
+			events = self.input_system.monitor()
 
 			# clear screen
 			self.renderer.clear()
 
 			# game loop here
-			self.game.update(dt, input_context)
+			self.game.update(dt, events)
 			self.game.render(self.engine_context.renderer.surface)
 
 			# update screen (flip)
