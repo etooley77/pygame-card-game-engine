@@ -2,8 +2,13 @@ from pygame.rect import Rect
 from pygame import draw
 
 class SnapZone(Rect):
+    DEFAULT_SIZE = (192, 256)
+
     def __init__(self, pos, size):
-        super().__init__(pos, size)
+        if size is not None:
+            super().__init__(pos, size)
+        else:
+            super().__init__(pos, SnapZone.DEFAULT_SIZE)
 
     def get_pos(self):
         return self.topleft
