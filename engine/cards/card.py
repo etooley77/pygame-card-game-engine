@@ -30,13 +30,13 @@ class Card:
 		self.draggable_rect = Rect(0, 0, self.rect.width // 1.25, self.rect.height // 1.5)
 
 	def update(self, input_context, game_context):
-		# hovered = self.rect.collidepoint(input_context.mouse_pos)
-		can_be_dragged = self.draggable_rect.collidepoint(input_context.mouse_pos)
+		# hovered = self.rect.collidepoint(input_context["mouse"]["mouse_pos"])
+		can_be_dragged = self.draggable_rect.collidepoint(input_context["mouse"]["mouse_pos"])
 
 		# Set currently active and hovered cards
 		if can_be_dragged:
 			Card.hovered = self
-			if input_context.mouse_pressed:
+			if input_context["mouse"]["mouse_pressed"]:
 				Card.active = self
 		else:
 			if Card.hovered == self:
@@ -48,14 +48,14 @@ class Card:
 			self.hoverable.stop_hover()
 
 		if self == Card.active:
-			if MouseHandler.check_inside_screen(input_context.mouse_pos, game_context["window_size"]):
-				if input_context.mouse_pressed:
-					self.draggable.start_drag(input_context.mouse_pos, self.pos)
+			if MouseHandler.check_inside_screen(input_context["mouse"]["mouse_pos"], game_context["window_size"]):
+				if input_context["mouse"]["mouse_pressed"]:
+					self.draggable.start_drag(input_context["mouse"]["mouse_pos"], self.pos)
 
-				if self == Card.active and input_context.mouse_down:
-					self.pos = self.draggable.drag(input_context.mouse_pos)
+				if self == Card.active and input_context["mouse"]["mouse_down"]:
+					self.pos = self.draggable.drag(input_context["mouse"]["mouse_pos"])
 
-				if self == Card.active and input_context.mouse_released:
+				if self == Card.active and input_context["mouse"]["mouse_released"]:
 					self.draggable.stop_drag()
 					Card.active = None
 
