@@ -8,47 +8,37 @@ class EventHandler:
 	def load_config(keybinds):
 		EventHandler.keybinds = keybinds
 
-	@staticmethod
-	def decode(events):
-		actions = []
+	def __init__(self):
+		self.actions = {"keys": [], "mouse": {"mouse_pressed": False, "mouse_down": False, "mouse_released": False, "mouse_pos": (0, 0)}}
+
+	def decode(self, events):
+		self.actions["keys"].clear()
+		self.actions["mouse"]["mouse_pressed"] = False
+		self.actions["mouse"]["mouse_released"] = False
 
 		for event in events:
 			match event.type:
 				case pygame.MOUSEBUTTONDOWN:
-					actions.append(EventHandler.decode_mouse_down_event(event.button))
+					match event.button:
+						case pygame.BUTTON_LEFT:
+							self.actions["mouse"]["mouse_pressed"] = True
+							self.actions["mouse"]["mouse_down"] = True
 
 				case pygame.MOUSEBUTTONUP:
-					actions.append(EventHandler.decode_mouse_up_event(event.button))
+					match event.button:
+						case pygame.BUTTON_LEFT:
+							self.actions["mouse"]["mouse_released"] = True
+							self.actions["mouse"]["mouse_down"] = False
 
 				case pygame.KEYDOWN:
 					try:
-						actions.append(EventHandler.keybinds[f"{event.key}"])
+						self.actions["keys"].append(EventHandler.keybinds[f"{event.key}"])
 					except:
 						continue
 
 				case _:
 					continue
 
-		return actions
-	
-	@staticmethod
-	def decode_mouse_down_event(button):
-		match button:
-			case 1: return "mouse_left_down"
-			case 2: return "mouse_middle_down"
-			case 3: return "mouse_right_down"
+		self.actions["mouse"]["mouse_pos"] = pygame.mouse.get_pos()
 
-			case _: pass
-
-	@staticmethod
-	def decode_mouse_up_event(button):
-		match button:
-			case 1: return "mouse_left_up"
-			case 2: return "mouse_middle_up"
-			case 3: return "mouse_right_up"
-
-			case _: pass
-
-	@staticmethod
-	def decode_keypress_event(dict):
-		pass
+		return self.actions
