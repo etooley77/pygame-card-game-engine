@@ -1,9 +1,12 @@
 from pygame.rect import Rect
+from pygame import draw
 
 class SnapZone(Rect):
-    def __init__(self, single_arg):
-        super().__init__(single_arg)
-        self.rect = Rect(single_arg)
+    def __init__(self, pos, size):
+        super().__init__(pos, size)
 
     def get_pos(self):
-        return self.rect.topleft
+        return self.topleft
+    
+    def render(self, surface):
+        draw.rect(surface, (255, 0, 0), self)
