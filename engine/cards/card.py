@@ -1,6 +1,6 @@
 from pygame.rect import Rect
 
-from engine.cards.behaviors import draggable, hoverable
+from engine.cards.behaviors import draggable, hoverable, snappable
 
 from engine.input.mouse_handler import MouseHandler
 
@@ -22,6 +22,8 @@ class Card:
 	def __init__(self, image, pos):
 		self.draggable = draggable.Draggable()
 		self.hoverable = hoverable.Hoverable()
+		self.snappable = snappable.Snappable()
+
 		self.image = image
 		self.hoverable.scale_factor = 1.1 # override default scale factor
 
@@ -36,7 +38,7 @@ class Card:
 		# Set currently active and hovered cards
 		if can_be_dragged:
 			Card.hovered = self
-			if input_context["mouse"]["mouse_pressed"]:
+			if input_context["mouse"]["mouse_pressed"] and not self.snappable.is_locked:
 				Card.active = self
 		else:
 			if Card.hovered == self:
@@ -48,6 +50,7 @@ class Card:
 			self.hoverable.stop_hover()
 
 		if self == Card.active:
+			self.snappable.is_snapped = False
 			if MouseHandler.check_inside_screen(input_context["mouse"]["mouse_pos"], game_context["window_size"]):
 				if input_context["mouse"]["mouse_pressed"]:
 					self.draggable.start_drag(input_context["mouse"]["mouse_pos"], self.pos)
