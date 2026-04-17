@@ -23,6 +23,7 @@ class SnapZone(Rect):
             # 
             # 
             # Fix how card is never removed from self.cards
+            # Migrate as much as possible to the Snappable behavior
             # 
             # 
 
