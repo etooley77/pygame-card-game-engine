@@ -7,5 +7,9 @@ class Snappable:
         self.curr_zone = None
 
     def snap(self, zone):
-        if self.curr_zone:
-            return self.curr_zone.topleft
+        self.curr_zone = zone
+        
+    def unsnap(self):
+        self.curr_zone.remove_card()
+        self.is_snapped = False
+        self.curr_zone = None

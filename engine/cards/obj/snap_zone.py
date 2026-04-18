@@ -19,22 +19,18 @@ class SnapZone(Rect):
     def add_card(self, card):
         if len(self.cards) < self.max_cards:
             self.cards.append(card)
-            
-            # 
-            # 
-            # Fix how card is never removed from self.cards
-            # Migrate as much as possible to the Snappable behavior
-            # 
-            # 
-
+            card.snappable.curr_zone = self
             Card.active == None
+
             card.rect.center = self.center
             card.pos = card.rect.topleft
-            print(self.center)
-            card.snappable.is_snapped = True
 
+            card.snappable.is_snapped = True
             if self.locked:
                 card.snappable.is_locked = True
+
+    def remove_card(self):
+        self.cards.pop(0)
         
     def update(self, dt, input_context):
         if self.collidepoint(input_context["mouse"]["mouse_pos"]) and input_context["mouse"]["mouse_released"] and Card.active is not None:
