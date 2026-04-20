@@ -54,4 +54,4 @@ class SandboxState(BaseState):
 		aod = Card(self.game_context["asset_manager"].get("ace_of_diamonds"), (650, 300))
 		self.cards.append(aod)
 
-		self.snap_zone = SnapZone((100, 100), None, 1, False)
+		self.snap_zone = SnapZone((100, 100), None, 2, False)

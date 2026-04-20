@@ -12,33 +12,43 @@ class SnapZone(Rect):
         else:
             super().__init__(pos, SnapZone.DEFAULT_SIZE)
 
+        self.color = (255, 0, 0)
+        self.border_radius = 10
+        self.highlighted = False
+
         self.max_cards = max_cards
         self.cards = []
         self.locked = locked
 
-    def add_card(self, card):
-        if len(self.cards) < self.max_cards:
-            self.cards.append(card)
-            card.snappable.curr_zone = self
-            Card.active == None
+    def snap(self, card):
+        card.snappable.is_snapped = True
+        self.cards.insert(0, card)
 
-            card.rect.center = self.center
-            card.pos = card.rect.topleft
+        card.rect.center = self.center
+        card.pos = card.rect.topleft
 
-            card.snappable.is_snapped = True
-            if self.locked:
-                card.snappable.is_locked = True
-
-    def remove_card(self):
-        self.cards.pop(0)
+    def unsnap(self):
+        card = self.cards.pop(0)
         
+        card.snappable.is_snapped = False
+    
     def update(self, dt, input_context):
-        if self.collidepoint(input_context["mouse"]["mouse_pos"]) and input_context["mouse"]["mouse_released"] and Card.active is not None:
-            self.add_card(Card.active)
+        # Check for inserted cards
+        if Card.active is not None and self.colliderect(Card.active.draggable_rect):
+            self.highlighted = True
 
+            if input_context["mouse"]["mouse_released"] and len(self.cards) < self.max_cards:
+                self.snap(Card.active)
+        else:
+            self.highlighted = False
+
+        # Card removal
+        if len(self.cards) > 0:
+            if Card.hovered == self.cards[0] and input_context["mouse"]["mouse_pressed"]:
+                self.unsnap()
     
     def render(self, surface):
-        draw.rect(surface, (255, 0, 0), self)
+        draw.rect(surface, self.color, self, border_radius=self.border_radius)
 
     
 

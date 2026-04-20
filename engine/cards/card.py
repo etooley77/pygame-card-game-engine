@@ -38,7 +38,7 @@ class Card:
 		# Set currently active and hovered cards
 		if can_be_dragged:
 			Card.hovered = self
-			if input_context["mouse"]["mouse_pressed"] and not self.snappable.is_locked:
+			if input_context["mouse"]["mouse_pressed"]:
 				Card.active = self
 		else:
 			if Card.hovered == self:
@@ -49,10 +49,7 @@ class Card:
 		else:
 			self.hoverable.stop_hover()
 
-		if self == Card.active:
-			if self.snappable.is_snapped and not self.snappable.is_locked:
-				self.snappable.unsnap()
-
+		if self == Card.active and not self.snappable.is_snapped:
 			if MouseHandler.check_inside_screen(input_context["mouse"]["mouse_pos"], game_context["window_size"]):
 				if input_context["mouse"]["mouse_pressed"]:
 					self.draggable.start_drag(input_context["mouse"]["mouse_pos"], self.pos)
