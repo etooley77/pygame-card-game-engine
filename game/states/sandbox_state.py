@@ -2,7 +2,7 @@ from pygame.image import load
 
 from engine.state.base_state import BaseState
 
-from engine.cards.card import Card
+from engine.cards.card_view import CardView
 from engine.cards.obj.snap_zone import SnapZone
 
 class SandboxState(BaseState):
@@ -28,7 +28,7 @@ class SandboxState(BaseState):
 		for card in self.cards:
 			card.update(input_context, self.game_context)
 
-		self.cards = Card.reorder(self.cards)
+		self.cards = CardView.reorder(self.cards)
 
 	def render(self, surface):
 		super().render(surface)
@@ -45,13 +45,13 @@ class SandboxState(BaseState):
 
 		self.game_context["asset_manager"].load_default_cards()
 
-		aos = Card(self.game_context["asset_manager"].get("ace_of_spades"), (600, 300))
+		aos = CardView(self.game_context["asset_manager"].get("ace_of_spades"), (600, 300))
 		self.cards.append(aos)
 
-		aoc = Card(self.game_context["asset_manager"].get("ace_of_clubs"), (625, 300))
+		aoc = CardView(self.game_context["asset_manager"].get("ace_of_clubs"), (625, 300))
 		self.cards.append(aoc)
 
-		aod = Card(self.game_context["asset_manager"].get("ace_of_diamonds"), (650, 300))
+		aod = CardView(self.game_context["asset_manager"].get("ace_of_diamonds"), (650, 300))
 		self.cards.append(aod)
 
 		self.snap_zone = SnapZone((100, 100), None, 2, False)

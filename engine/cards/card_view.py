@@ -4,7 +4,7 @@ from engine.cards.behaviors import draggable, hoverable, snappable
 
 from engine.input.mouse_handler import MouseHandler
 
-class Card:
+class CardView:
 	#: The currently active card being dragged, or None if no card is active.
 	active = None
 	#: The card currently being hovered over, or None if no card is hovered.
@@ -12,11 +12,11 @@ class Card:
 
 	@staticmethod
 	def reorder(card_list):
-		if Card.active == None:
+		if CardView.active == None:
 			return card_list
 		else:
-			if Card.active in card_list:
-				card_list.append(card_list.pop(card_list.index(Card.active)))
+			if CardView.active in card_list:
+				card_list.append(card_list.pop(card_list.index(CardView.active)))
 				return card_list
 
 	def __init__(self, image, pos):
@@ -37,36 +37,36 @@ class Card:
 
 		# Set currently active and hovered cards
 		if can_be_dragged:
-			Card.hovered = self
+			CardView.hovered = self
 			if input_context["mouse"]["mouse_pressed"]:
-				Card.active = self
+				CardView.active = self
 		else:
-			if Card.hovered == self:
-				Card.hovered = None
+			if CardView.hovered == self:
+				CardView.hovered = None
 
-		if self == Card.hovered and (Card.active == None or Card.active == self):
+		if self == CardView.hovered and (CardView.active == None or CardView.active == self):
 			self.hoverable.start_hover()
 		else:
 			self.hoverable.stop_hover()
 
-		if self == Card.active and not self.snappable.is_snapped:
+		if self == CardView.active and not self.snappable.is_snapped:
 			if MouseHandler.check_inside_screen(input_context["mouse"]["mouse_pos"], game_context["window_size"]):
 				if input_context["mouse"]["mouse_pressed"]:
 					self.draggable.start_drag(input_context["mouse"]["mouse_pos"], self.pos)
 
-				if self == Card.active and input_context["mouse"]["mouse_down"]:
+				if self == CardView.active and input_context["mouse"]["mouse_down"]:
 					self.pos = self.draggable.drag(input_context["mouse"]["mouse_pos"])
 
-				if self == Card.active and input_context["mouse"]["mouse_released"]:
+				if self == CardView.active and input_context["mouse"]["mouse_released"]:
 					self.draggable.stop_drag()
-					Card.active = None
+					CardView.active = None
 
 		# Update position
 		self.rect.topleft = self.pos
 		self.draggable_rect.center = self.rect.center
 
 	def render(self, surface):
-		if self.hoverable.hovering and self == Card.hovered:
+		if self.hoverable.hovering and self == CardView.hovered:
 			scaled_image = self.hoverable.scale_on_hover(self.image, self.pos)
 			surface.blit(scaled_image[0], scaled_image[1])
 		else:

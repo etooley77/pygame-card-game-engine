@@ -1,7 +1,7 @@
 from pygame.rect import Rect
 from pygame import draw
 
-from engine.cards.card import Card
+from engine.cards.card_view import CardView
 
 class SnapZone(Rect):
     DEFAULT_SIZE = (192, 256)
@@ -35,17 +35,17 @@ class SnapZone(Rect):
     
     def update(self, dt, input_context):
         # Check for inserted cards
-        if Card.active is not None and self.colliderect(Card.active.draggable_rect):
+        if CardView.active is not None and self.colliderect(CardView.active.draggable_rect):
             self.highlighted = True
 
             if input_context["mouse"]["mouse_released"] and len(self.cards) < self.max_cards:
-                self.snap(Card.active)
+                self.snap(CardView.active)
         else:
             self.highlighted = False
 
-        # Card removal
+        # CardView removal
         if len(self.cards) > 0:
-            if Card.hovered == self.cards[0] and input_context["mouse"]["mouse_pressed"]:
+            if CardView.hovered == self.cards[0] and input_context["mouse"]["mouse_pressed"]:
                 self.unsnap()
     
     def render(self, surface):
