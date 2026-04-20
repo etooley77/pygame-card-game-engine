@@ -40,6 +40,7 @@ class SnapZone(Rect):
 
             if input_context["mouse"]["mouse_released"] and len(self.cards) < self.max_cards:
                 self.snap(CardView.active)
+                CardView.active = None
         else:
             self.highlighted = False
 
