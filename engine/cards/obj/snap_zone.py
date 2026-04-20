@@ -13,6 +13,7 @@ class SnapZone(Rect):
             super().__init__(pos, SnapZone.DEFAULT_SIZE)
 
         self.color = (255, 0, 0)
+        self.highlight_color = (255, 100, 0)
         self.border_radius = 10
         self.highlighted = False
 
@@ -48,7 +49,10 @@ class SnapZone(Rect):
                 self.unsnap()
     
     def render(self, surface):
-        draw.rect(surface, self.color, self, border_radius=self.border_radius)
+        if self.highlighted:
+            draw.rect(surface, self.highlight_color, self, border_radius=self.border_radius)
+        else:
+            draw.rect(surface, self.color, self, border_radius=self.border_radius)
 
     
 
