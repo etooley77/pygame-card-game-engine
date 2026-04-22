@@ -36,7 +36,7 @@ class SnapZone(Rect):
     def update(self, dt, input_context):
         # Check for inserted cards
         if CardView.active is not None and self.colliderect(CardView.active.draggable_rect):
-            self.highlighted = True
+            self.highlighted = len(self.cards) < self.max_cards
 
             if input_context["mouse"]["mouse_released"] and len(self.cards) < self.max_cards:
                 self.snap(CardView.active)
