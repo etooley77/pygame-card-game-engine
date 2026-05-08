@@ -6,7 +6,7 @@ from engine.cards.card_view import CardView
 class SnapZone(Rect):
     DEFAULT_SIZE = (192, 256)
 
-    def __init__(self, pos, size, max_cards, locked):
+    def __init__(self, pos, size, max_cards):
         if size is not None:
             super().__init__(pos, size)
         else:
@@ -19,7 +19,8 @@ class SnapZone(Rect):
 
         self.max_cards = max_cards
         self.cards = []
-        self.locked = locked
+        self.input = False
+        self.locked = False
 
     def snap(self, card):
         card.snappable.is_snapped = True
@@ -29,11 +30,17 @@ class SnapZone(Rect):
         card.pos = card.rect.topleft
 
     def unsnap(self):
+        if self.locked:
+            return        
+
         card = self.cards.pop(0)
         
         card.snappable.is_snapped = False
     
     def update(self, dt, input_context):
+        if not self.input:
+            return
+
         # Check for inserted cards
         if CardView.active is not None and self.colliderect(CardView.active.draggable_rect):
             self.highlighted = len(self.cards) < self.max_cards
@@ -59,3 +66,19 @@ class SnapZone(Rect):
 
     def get_pos(self):
         return self.topleft
+    
+    def set_locked(self):
+        if not self.locked:
+            self.locked = True
+        return self
+    
+    def toggle_locked(self):
+        self.locked = not self.locked
+
+    def set_input(self):
+        if not self.input:
+            self.input = True
+        return self
+
+    def toggle_input(self):
+        self.input = not self.input
